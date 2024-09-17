@@ -1,0 +1,39 @@
+ru:
+  buttons:
+    add: "Добавить"
+    delete: "Удалить"
+    add_city: "Добавить город"
+    streets: "Улицы"
+  avito:
+    autoload:
+      upload_url: "Ссылка на файл"
+      autoload_enabled: "Автозагрузка"
+      report_email: "Электронная почта для отчетов"
+      schedule: "Расписание"
+      rate: "Объявлений за период"
+      weekdays: "Дни недели"
+      time_slots: "Часы"
+      report:
+        report_id: "Отчет"
+        started_at: "Время начала выгрузки"
+        section_stats: "Подробности"
+        status: "Статус"
+        success_warning: "C проблемами"
+        error: "Ошибки"
+        per_page: "На странице"
+        page: "Страница"
+        pages: "Страниц"
+        total: "Всего"
+    notice:
+      upd_autoload_conf: "Успешно обновлены настройки автозагрузки"
+      upd_ads: "Успешно запущен процес обновления обявлений из Excel-feed."
+    error:
+      set_store: "Не задан для магазина client_id или client_secret или магазин отсутствует в базе."
+      set_avito: "Ошибка обновления Авито токена! Возможно магазин заблокирован"
+      upd_autoload_conf: "Ошибка параметров JSON. Настройки автозагрузки не были изменены."
+      upd_ads: "Ошибка запуска обновления!"
+  pagy:
+    nav:
+      prev: "Предыдущая"
+      next: "Слудующая"
+      gap: "…"

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= ((yield :title).present? ? ("#{yield :title} | ") : '') + 'DSG Avito' %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= action_cable_meta_tag if Rails.env.production? %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <%= javascript_tag do %>
+      window.locale = "<%= I18n.locale %>"
+      //window.upload_endpoint = "<%#= app_config.media_server_upload_endpoint %>"
+      window.noimage_url = "<%= noimage_url %>"
+      //window.base_url = "window.location.origin<%#= Rails.application.config.base_url %>"
+    <% end %>
+
+    <%= yield :head %>
+  </head>
+
+  <body>
+    <header>
+      <%= render '/layouts/header' %>
+    </header>
+    <main>
+      <div class="container">
+        <h1 class="main-h1 mb-3 mt-3"><%= yield :title %></h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <%= render_breadcrumbs tag: 'li', separator: ' / ', class: 'breadcrumb-item' %>
+          </ol>
+        </nav>
+      </div>
+
+      <%= yield %>
+    </main>
+    <footer>
+      <div class="container mb-3 mt-4">
+        <h3><%= link_to 'DSG Avito', root_path, title: 'На главную' %></h3>
+      </div>
+    </footer>
+  </body>
+</html>

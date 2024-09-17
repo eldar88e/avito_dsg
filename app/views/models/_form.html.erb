@@ -1,0 +1,25 @@
+<%= form_with(model: @model, url: url, method: method) do |form| %>
+  <div class="row">
+    <div class="col-12 col-md-12 mb-3">
+      <%= form.label :title, class: 'form-label' %>
+      <%= form.text_field :title, value: @model.title, class: 'form-control', placeholder: 'Название запчасти' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :sub_brand_id, class: 'form-label' %>
+      <%= form.select :sub_brand_id, options_for_select(SubBrand.all.map { |i| [i.title, i.id] },
+                                                        @model.sub_brand_id), {}, class: 'form-select' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :part_ids, class: 'form-label' %>
+      <%= form.select :part_ids, options_for_select(Part.all.map { |i| ["#{i.title} #{i.model_part.title}", i.id] }, @model.part_ids),
+                      { multiple: true }, class: 'form-select', size: 2 %>
+    </div>
+
+    <div class="col-12 col-md-12 mb-3">
+      <%= form.submit method == :patch ?  'Save' : 'Add',
+                      class: "btn #{method == :patch ? 'btn-warning' : 'btn-primary'} mt-md-2 mt-0 btn-sm" %>
+    </div>
+  </div>
+<% end %>

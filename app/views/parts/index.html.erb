@@ -1,0 +1,13 @@
+<% content_for :title do %>
+  Запчасти
+<% end %>
+
+<div class="container">
+  <ul class="list-group">
+    <%= render '/parts/new_btn' %>
+
+    <% @parts.each do |part| %>
+        <%= render part %>
+    <% end %>
+  </ul>
+</div>

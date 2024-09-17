@@ -1,0 +1,117 @@
+services:
+  pg:
+    image: postgres:16.1
+    container_name: pg-dsg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      TZ: Europe/Moscow
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - dsg-net
+
+  web:
+    image: web
+    build: .
+    container_name: web-dsg
+    env_file: ./.env
+    depends_on:
+      - pg
+      - redis
+      - mongodb
+    volumes:
+      - gems:/usr/local/bundle
+      - ./node_modules:/app/node_modules
+      - ./log:/app/log
+      - ./public:/app/public
+      - ./storage:/app/storage
+      - ./game_lists:/app/game_lists
+    networks:
+      - dsg-net
+    restart: unless-stopped
+
+  good_job:
+    image: good_job
+    build: .
+    env_file: ./.env
+    container_name: good_job-dsg
+    entrypoint: []
+    command: bundle exec good_job start
+    volumes:
+      - gems:/usr/local/bundle
+      - ./log:/app/log
+      - ./storage:/app/storage
+      - ./game_lists:/app/game_lists
+    depends_on:
+      - pg
+    networks:
+      - dsg-net
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: redis-dsg
+    command: redis-server
+    restart: unless-stopped
+    networks:
+      - dsg-net
+    volumes:
+      - redis:/data
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-dsg
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./public:/app
+      - ./game_lists:/app/game_lists
+    depends_on:
+      - web
+    networks:
+      dsg-net:
+      proxy-net:
+        ipv4_address: 172.29.0.7
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-dsg
+    restart: unless-stopped
+    env_file: ./.env
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - dsg-net
+
+  cable:
+    image: cable
+    build: .
+    env_file: ./.env
+    container_name: cable-dsg
+    entrypoint: []
+    command: bundle exec puma -p 28080 ./config/cable/config.ru
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+    ports:
+      - 28081:28080
+    depends_on:
+      - pg
+      - redis
+      - web
+    networks:
+      - dsg-net
+    restart: unless-stopped
+
+volumes:
+  gems:
+  db_data:
+  redis:
+  mongo_data:
+
+networks:
+  dsg-net:
+  proxy-net:
+    external: true

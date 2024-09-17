@@ -1,0 +1,7 @@
+<% content_for :title do %>
+  Править <%= @product.title %>
+<% end %>
+
+<div class="container">
+  <%= render partial: '/products/form', locals: { url: product_path(@product.id), method: :patch } %>
+</div>

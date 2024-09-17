@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  port: 5432
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: dsg_avito_development
+
+test:
+  <<: *default
+  database: dsg_avito_test
+
+production:
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST") { 'localhost' } %>
+  database: dsg_avito_production
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASSWORD"] %>

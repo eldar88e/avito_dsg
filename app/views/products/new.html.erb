@@ -1,0 +1,7 @@
+<% content_for :title do %>
+  Создать новое объявление
+<% end %>
+
+<div class="container">
+  <%= render partial: '/products/form', locals: { url: products_path, method: :post } %>
+</div>

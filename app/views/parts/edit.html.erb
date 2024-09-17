@@ -1,0 +1,7 @@
+<% content_for :title do %>
+  Редактирование Запчасти <%= @part.title %>
+<% end %>
+
+<div class="container">
+  <%= render partial: '/parts/form', locals: { url: part_path(@part), method: :patch } %>
+</div>

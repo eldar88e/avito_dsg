@@ -1,0 +1,62 @@
+<%= form_with(model: @part, url: url, method: method) do |form| %>
+  <div class="row">
+    <div class="col-12 col-md-12 mb-3">
+      <%= form.label :title, class: 'form-label' %>
+      <%= form.text_field :title, value: @part.title, class: 'form-control', placeholder: 'Название запчасти' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :part_type, class: 'form-label' %>
+      <%= form.text_field :part_type, value: @part.part_type, class: 'form-control', placeholder: 'Тип запчасти трансмиссии' %>
+    </div>
+
+    <div class="col-12 col-md-12 mb-3">
+      <%= form.label :description, 'Описание', class: 'form-label' %>
+      <%= form.rich_text_area :description, value: @part.description, size: '50x3', class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :min_price, class: 'form-label' %>
+      <%= form.number_field :min_price, value: @part.min_price, class: 'form-control', placeholder: 'Минимальная стоимость' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :max_price, class: 'form-label' %>
+      <%= form.number_field :max_price, value: @part.max_price, class: 'form-control', placeholder: 'Максимальная стоимость' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :model_part_id, class: 'form-label' %>
+      <%= form.select :model_part_id, options_for_select(ModelPart.all.map { |mp| [mp.title, mp.id] }, @part.model_part_id), {}, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :photos, "Укажите картинки для #{@part.title}(поддерживаемые форматы: JPG, PNG, WEBP)", class: 'form-label' %>
+      <%= form.file_field :photos, multiple: true, class: 'form-control', accept: 'image/jpeg, image/png, image/webp' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :remove_photos, "Удалить фотографии", class: 'form-label' %>
+      <div class="row" data-controller="fancybox">
+        <% @part.photos.each do |photo| %>
+          <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="form-check check-photo">
+              <%= form.check_box :remove_photos, { multiple: true, class: 'form-check-input' }, photo.id, nil %>
+              <a data-fancybox="gallery" data-src="<%= url_for(photo) %>" data-caption="<%= @part.title %>">
+                <div class="loading-image" style='width: 50px; height: 50px'>
+                  <div class="photo-thumbnail" style="background-image: url(<%= url_for(photo) %>);"></div>
+                </div>
+              </a>
+              <%= form.label "remove_photos_#{photo.id}", photo.filename, class: 'form-check-label' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-12 mb-3">
+      <%= form.submit method == :patch ?  'Save' : 'Add',
+                      class: "btn #{method == :patch ? 'btn-warning' : 'btn-primary'} mt-md-2 mt-0 btn-sm" %>
+    </div>
+  </div>
+<% end %>

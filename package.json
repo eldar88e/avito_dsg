@@ -1,0 +1,36 @@
+{
+  "name": "avito_dsg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Eldar Eminov <em88el@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@fancyapps/ui": "^5.0.33",
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.0-beta.2",
+    "@popperjs/core": "^2.11.8",
+    "@rails/actiontext": "^7.1.3-4",
+    "autoprefixer": "^10.4.16",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "esbuild": "^0.19.11",
+    "nodemon": "^3.0.2",
+    "postcss": "^8.4.32",
+    "postcss-cli": "^11.0.0",
+    "sass": "^1.69.6",
+    "swiper": "^11.1.4",
+    "trix": "^2.1.3",
+    "uppy": "^4.0.5"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --minify --outdir=app/assets/builds --public-path=/assets",
+    "build:css:compile": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
+    "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
+    "build:css": "yarn build:css:compile && yarn build:css:prefix",
+    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\""
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "repository": "git@github.com:eldar88e/avito_dsg.git"
+}

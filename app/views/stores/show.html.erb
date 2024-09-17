@@ -1,0 +1,71 @@
+<% content_for :title do %>
+  Магазин <%= @store.manager_name %>
+  <% if !@store.percent.zero? %>
+    <span class="percent"><%= '+' if @store.percent.positive?  %><%= "#{@store.percent}" %>%</span>
+  <% end %>
+<% end %>
+
+<% content_for :head do %>
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=369d354e-0df0-4d9d-bb3a-08bc6a532a15" type="text/javascript"></script>
+<% end %>
+
+<%= turbo_frame_tag @store do %>
+  <div class="container">
+    <div class="d-flex gap-3">
+      <%= button_to 'Обновить feed', store_update_feed_path(@store),
+                    class: 'loader-btn btn btn-success btn-upd-feed',
+                    data: { controller: 'btn_preloader', action: 'click->btn_preloader#call' } %>
+
+      <%= button_to 'Обновить Black list', store_update_ban_list_path(@store),
+                    class: 'loader-btn btn btn-dark' %>
+    </div>
+
+    <ul class="nav nav-tabs mt-2 mt-md-3" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Основная информация</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">Адреса магазина</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Слои картинки</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="ban-tab" data-bs-toggle="tab" data-bs-target="#ban" type="button" role="tab" aria-controls="ban" aria-selected="false">Заблокированные объявления</button>
+      </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <a href="<%= edit_store_path(@store.id) %>" class='mb-3 btn btn-warning'>Edite</a>
+
+        <ul class="list-group">
+          <% @store.attributes.keys.reject { |i| i.match?(/^id|created_at|updated_at/) }.each do |name| %>
+            <li class="list-group-item list-group-item-action overflow-hidden">
+              <strong><%= name %>: </strong>
+              <%= name.match?(/description|desc_game|desc_product/) ? Sanitize.fragment(@store.send(name.to_sym), @whitelist).html_safe : @store.send(name.to_sym) %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="tab-pane fade show" id="address" role="tabpanel" aria-labelledby="address-tab">
+        <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
+
+        <ul class="list-group" id="addresses">
+          <%= render @store.addresses.order(:id) %>
+        </ul>
+      </div>
+
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <%= render partial: '/image_layers/new_image_layer_btn', locals: { store: @store } %>
+
+        <ol class="list-group list-group-numbered" id="image_layers">
+          <%= render @store.image_layers.order(:menuindex, :id) %>
+        </ol>
+      </div>
+
+      <%= render '/stores/ban_list' %>
+    </div>
+  </div>
+<% end %>
