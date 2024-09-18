@@ -70,6 +70,6 @@ class PartsController < ApplicationController
   def part_params
     for_permit = %i[title description part_type model_part_id min_price max_price template_title]
     for_permit << { photos: [] } if params[:part][:photos].reject(&:blank?).present?
-    params.require(:part).permit(*for_permit)
+    params.require(:part).permit(*for_permit, model_ids: [])
   end
 end
