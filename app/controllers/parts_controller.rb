@@ -35,9 +35,6 @@ class PartsController < ApplicationController
           @part.photos.find(photo_id).purge
         end
       end
-      # binding.pry
-      # params[:part][:photos].each { |photo| photo.present? && @part.photos.attach(photo) }
-
       flash[:success] = "Запчасть #{@part.title} была успешно обновлена."
       redirect_to parts_path # @sub_part
     else
