@@ -12,61 +12,43 @@ Rails.application.configure do
       kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
       class: "MainPopulateJob",
       set: { priority: 10 }, # additional ActiveJob properties; can also be a lambda/proc e.g. `-> { { priority: [1,2].sample } }`
-      description: "Populate the Google Sheet for the Avito."
-    },
-    download_images: {
-      cron: "0 2 29 2 *",
-      class: "GameImageDownloaderJob",
-      kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
-      set: { priority: 10 },
-      description: "Download all game images."
+      description: "Populate excel feed."
     },
     update_excel: {
-      cron: "0 3 29 2 *",
+      cron: "0 2 29 2 *",
       class: "WatermarksSheetsJob",
       kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
       set: { priority: 10 },
-      description: "Update all excel files with replacing all images"
+      description: "Update all excel files"
     },
-    clean_tables: {
-      cron: "30 3 29 2 *",
-      class: "CleanAttachBlobJob",
+    clear: {
+      cron: "0 3 29 2 *",
+      class: "Clean::MainCleanerJob",
+      kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
       set: { priority: 10 },
-      description: "Clean up tables of deleted images on local disk."
-    },
-    clean_del_stores: {
-      cron: "0 4 29 2 *",
-      class: "PurgeDeletedStoreImgJob",
-      set: { priority: 10 },
-      description: "Purge deleted stores and addresses images"
+      description: "Job on cleaning unnecessary files, blobs, and attachments"
     }
   }
 
   production = {
     update_feed: {
-      cron: "30 10,19 * * *",
+      cron: "40 8,21 * * *",
       kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
       class: "MainPopulateJob",
-      set: { priority: 10 }, # additional ActiveJob properties; can also be a lambda/proc e.g. `-> { { priority: [1,2].sample } }`
-      description: "Populate the Google Sheet for the Avito."
-    },
-    clean_images: {
-      cron: "0 0 1 * *",
-      class: "CleanUnattachedBlobsJob",
       set: { priority: 10 },
-      description: "Clean up unattached blobs and images."
+      description: "Populate excel feed."
     },
     check_avito_shedules: {
-      cron: "30 8-23 * * *",
-      class: "CheckAvitoSchedulesJob",
+      cron: "10 8-23 * * *",
+      class: "Avito::CheckSchedulesJob",
       set: { priority: 10 },
       #args: [42, "life"],
       kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
       description: "Check store schedules in avito"
     },
     check_avito_errors: {
-      cron: "0 18 * * *",
-      class: "CheckAvitoErrorsJob",
+      cron: "50 7,20 * * *",
+      class: "Avito::CheckErrorsJob",
       set: { priority: 10 },
       kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
       description: "Check errors in the last report"

@@ -18,12 +18,9 @@ if true  # Rails.env.development?
 
   user.stores.find_or_create_by(store)
 
-  dsg         = ['', 'DSG', 'ДСГ', 'DSG 7']
   model_parts = %w[DQ200 DL501]
   brands      = %w[VAG Luk]
-  brands.each do |brand|
-    Brand.find_or_create_by(title: brand)
-  end
+  brands.each { |brand| Brand.find_or_create_by(title: brand) }
 
   sub_brands = {
     'Audi' => %w[A1 A3],
