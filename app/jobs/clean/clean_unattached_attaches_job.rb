@@ -12,7 +12,7 @@ class Clean::CleanUnattachedAttachesJob < ApplicationJob
       count               = 0
       attachments.each { |attach| (attach.purge && count += 1) unless existing_record_ids.include?(attach.record_id) }
       msg = "⚠️ Cleared #{count} attachments, blocks and files from #{record_type}."
-      TelegramService.call(user, msg) if user.present?
+      TelegramService.call(user, msg) if user.present? && count > 0
       # Rails.logger.info msg if count > 0
     end
     nil
