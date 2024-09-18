@@ -12,9 +12,10 @@ class PartsController < ApplicationController
   end
 
   def create
-    @part = Part.new(part_params)
+    @part = params[:copy_id].present? ? Part.find(params[:copy_id]).dup : Part.new(part_params)
     if @part.save
       msg = "Запчасть #{@part.title} была успешно добавлена."
+      msg.sub!('добавлена', 'скопирована') if params[:copy_id]
       render turbo_stream: [
         turbo_stream.replace(:new_part, partial: 'parts/new_btn'),
         turbo_stream.after(:new_part, partial: 'parts/part', locals: { part: @part }),

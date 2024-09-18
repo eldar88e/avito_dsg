@@ -4,6 +4,10 @@
     <div>Стоимость min: <%= part.min_price %>₽</div>
     <div>Стоимость max: <%= part.max_price %>₽</div>
     <div class="d-flex gap-3">
+      <%= button_to parts_path(copy_id: part), class: 'btn btn-primary btn-sm',
+                    title: 'Скопировать' do %>
+        <i class="bi bi-copy"></i>
+      <% end %>
       <a href="<%= edit_part_path(part) %>" class='btn btn-warning btn-sm'>Править</a>
       <%= button_to part_path(part), method: :delete, class: 'btn btn-danger btn-sm',
                     data: { confirm: 'Вы уверены, что хотите удалить данную запчасть и все с нею связанные фото?',
