@@ -15,7 +15,7 @@ class Part < ApplicationRecord
   private
 
   def remove_parts_associations
-    parts.clear
+    models.clear
   end
 
   def validate_images

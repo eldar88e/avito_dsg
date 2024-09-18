@@ -30,6 +30,14 @@ class PartsController < ApplicationController
 
   def update
     if @part.update(part_params)
+      if params[:part][:photos].present? && params[:part][:photos].size < 21
+        params[:part][:photos].each do |photo|
+          @part.photos.attach(photo)
+        end
+      else
+        return error_notice('Вложений должно быть до 20шт.')
+      end
+
       if params[:part][:remove_photos].present?
         params[:part][:remove_photos].each do |photo_id|
           @part.photos.find(photo_id).purge
@@ -66,8 +74,7 @@ class PartsController < ApplicationController
   end
 
   def part_params
-    for_permit = %i[title description part_type model_part_id min_price max_price template_title]
-    for_permit << { photos: [] } if params[:part][:photos].reject(&:blank?).present?
-    params.require(:part).permit(*for_permit, model_ids: [])
+    params.require(:part).permit(:title, :description, :part_type, :model_part_id, :min_price,
+                                 :max_price, :template_title, model_ids: [])
   end
 end
