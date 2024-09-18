@@ -8,7 +8,7 @@ class Part < ApplicationRecord
   has_many :ads, as: :adable, dependent: :destroy
   belongs_to :model_part
   has_many_attached :photos, dependent: :purge
-  has_and_belongs_to_many :parts
+  has_and_belongs_to_many :models
 
   before_destroy :remove_parts_associations
 

@@ -5,6 +5,12 @@
       <%= form.text_field :title, value: @part.title, class: 'form-control', placeholder: 'Название запчасти' %>
     </div>
 
+    <div class="col-12 col-md-12 mb-3">
+      <%= form.label :template_title, class: 'form-label' %>
+      <%= form.text_field :template_title, value: @part.template_title,
+                          class: 'form-control', placeholder: 'Шаблон названия запчасти для авито' %>
+    </div>
+
     <div class="mb-3">
       <%= form.label :part_type, class: 'form-label' %>
       <%= form.text_field :part_type, value: @part.part_type, class: 'form-control', placeholder: 'Тип запчасти трансмиссии' %>

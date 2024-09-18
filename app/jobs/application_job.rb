@@ -8,7 +8,7 @@ class ApplicationJob < ActiveJob::Base
   private
 
   def current_user(user_id)
-    User.find(user_id)
+    User.find(user_id) if user_id.present?
   end
 
   def broadcast_notify(message, key='success')
@@ -19,5 +19,9 @@ class ApplicationJob < ActiveJob::Base
       partial: '/notices/notice',
       locals: { notices: message, key: key }
     )
+  end
+
+  def find_user(args)
+    args[:user] || current_user(args[:user_id])
   end
 end

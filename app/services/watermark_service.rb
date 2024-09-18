@@ -11,17 +11,17 @@ class WatermarkService
     @width     = (@settings[:avito_img_width] || 1920).to_i
     @height    = (@settings[:avito_img_height] || 1440).to_i
     @new_image = initialize_first_layer
-    @part      = args[:sub_part]
+    @images    = args[:images]
     img_url    = find_main_ad_img
     @image     = image_exist?(img_url)
     @layers    = make_layers_row
 
     @layers << { img: img_url, menuindex: @store.menuindex,
-                 params: @store.game_img_params.presence || {}, layer_type: 'img' }
+                 params: @store.game_img_params.presence || {}, layer_type: 'img', dynamic: true }
     @layers.sort_by! { |layer| layer[:menuindex] }
   end
 
-  def add_watermarks
+  def add_watermarks(dynamic)
     @layers.each do |layer|
       layer[:params] =
         if layer[:params].is_a?(Hash)
@@ -30,7 +30,8 @@ class WatermarkService
           eval(layer[:params]).transform_keys { |key| key.to_s } if layer[:params].present?
         end
       layer[:params] = rewrite_pos_size(layer[:params])
-      layer[:layer_type] == 'text' ? add_text(layer) : add_img(layer)
+      dynamic_method = layer[:dynamic] ? dynamic : nil
+      layer[:layer_type] == 'text' ? add_text(layer) : add_img(layer, dynamic_method)
     end
 
     @new_image
@@ -50,17 +51,26 @@ class WatermarkService
     args.merge formated_args
   end
 
-  def add_img(layer)
+  def add_img(layer, dynamic)
     params = layer[:params]
     img    = Image.read(layer[:img]).first
     if (params['column'] && !params['column'].zero?) || (params['row'] && !params['row'].zero?)
       img.resize_to_fit!(params['row'], params['column'])
     end
 
+    send(dynamic, img) if dynamic.present?
+
     x_offset = params['pos_x'].present? ? params['pos_x'] : (@new_image.columns - img.columns) / 2
     y_offset = params['pos_y'].present? ? params['pos_y'] : (@new_image.rows - img.rows) / 2
 
     @new_image.composite!(img, x_offset, y_offset, OverCompositeOp)
+  end
+
+  def rotate(img)
+    img.rotate! [0, 90, 180, 270].sample
+    img.rotate!([-2, -1, 0, 1, 2].sample)
+    dynamic = [:flop!, nil].sample
+    img.send(dynamic) if dynamic
   end
 
   def add_text(layer)
@@ -100,9 +110,9 @@ class WatermarkService
   end
 
   def find_main_ad_img
-    return unless @part.photos.present?
+    return unless @images.present?
 
-    key = @part.photos.sample.blob.key
+    key = @images.sample.blob.key
     raw_path = key.scan(/.{2}/)[0..1].join('/')
     "./storage/#{raw_path}/#{key}"
   end
@@ -136,8 +146,6 @@ class WatermarkService
   def initialize_first_layer
     Image.new(@width, @height) do |c|
       c.background_color = @settings[:avito_back_color] || '#FFFFFF'
-      #c.format           = 'JPEG'
-      #c.interlace        = PlaneInterlace
     end
   end
 end

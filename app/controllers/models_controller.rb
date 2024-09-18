@@ -52,6 +52,6 @@ class ModelsController < ApplicationController
   end
 
   def model_params
-    params.require(:model).permit(:title, :sub_brand_id, part_ids: [])
+    params.require(:model).permit(:title, :sub_brand_id, :start_year, :end_year, part_ids: [])
   end
 end

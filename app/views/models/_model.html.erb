@@ -1,6 +1,7 @@
 <li class="list-group-item list-group-item-action %>" id="<%= dom_id(model) %>">
   <div class="d-flex justify-content-between">
     <div><%= "#{model.sub_brand.title} #{model.title}" %></div>
+    <div><%= "#{model.start_year} — #{model.end_year}" %></div>
     <div class="d-flex gap-3">
       <a href="<%= edit_model_path(model) %>" class='btn btn-warning btn-sm'>Править</a>
       <%= button_to model_path(model), method: :delete, class: 'btn btn-danger btn-sm',

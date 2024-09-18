@@ -6,6 +6,18 @@
   <ul class="list-group">
     <%= render '/models/new_btn' %>
 
+    <li class="list-group-item list-group-item-action active mobile-none">
+      <div class="d-flex justify-content-between">
+        <div>
+          Бренд + модель
+        </div>
+        <div>
+          Года выпуска
+        </div>
+        <div>
+        </div>
+      </div>
+    </li>
     <% @models.each do |model| %>
         <%= render model %>
     <% end %>

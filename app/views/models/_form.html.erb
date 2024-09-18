@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12 col-md-12 mb-3">
       <%= form.label :title, class: 'form-label' %>
-      <%= form.text_field :title, value: @model.title, class: 'form-control', placeholder: 'Название запчасти' %>
+      <%= form.text_field :title, value: @model.title, class: 'form-control', placeholder: 'Название модели' %>
     </div>
 
     <div class="mb-3">
@@ -15,6 +15,16 @@
       <%= form.label :part_ids, class: 'form-label' %>
       <%= form.select :part_ids, options_for_select(Part.all.map { |i| ["#{i.title} #{i.model_part.title}", i.id] }, @model.part_ids),
                       { multiple: true }, class: 'form-select', size: 2 %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :start_year, class: 'form-label' %>
+      <%= form.select :start_year, options_for_select([*2007..Date.today.year], @model.start_year || 2008), {}, class: 'form-select' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :end_year, class: 'form-label' %>
+      <%= form.select :end_year, options_for_select([*2007..Date.today.year], @model.end_year || Date.today.year), {}, class: 'form-select' %>
     </div>
 
     <div class="col-12 col-md-12 mb-3">
