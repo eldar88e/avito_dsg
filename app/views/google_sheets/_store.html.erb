@@ -1,10 +1,11 @@
 <li class="list-group-item list-group-item-action mobile-list-top-border">
   <div class="row">
-    <div class="col=12 col-md-2">
+    <div class="col=12 col-md-2 mb-3 mb-md-0">
       <%= link_to store.manager_name, store_path(store), data: { turbo_prefetch: false },
                   title: "Перейти к управлению магазином #{store.manager_name}" %>
     </div>
-    <div class="col=12 col-md-6">
+
+    <div class="col=12 col-md-6 mb-3 mb-md-0">
       <%= link_to store.var, "/game_lists/#{store.var}.xlsx" %>
     </div>
 
