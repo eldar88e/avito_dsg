@@ -435,3 +435,14 @@ button.add:after, a.add:after {
     -webkit-line-clamp: 3;
   }
 }
+
+.close-turbo-frame-btn {
+  position: absolute;
+  top: 5px;
+  right: 17px;
+
+  i {
+    font-size: 20px;
+    color: #dc3545;
+  }
+}

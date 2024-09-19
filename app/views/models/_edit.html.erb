@@ -1,0 +1,6 @@
+<li class="list-group-item list-group-item-action list-group-item-warning" id="<%= dom_id(@model) %>">
+  <%= render partial: '/models/form', locals: { url: model_path(@model), method: :patch } %>
+  <%= link_to model_path(@model), class: 'close-turbo-frame-btn', data: { turbo_prefetch: false }, title: 'Закрыть' do %>
+    <i class="bi bi-x-circle-fill"></i>
+  <% end %>
+</li>

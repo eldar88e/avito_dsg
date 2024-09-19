@@ -1,10 +1,14 @@
 class ModelsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_model, only: [:edit, :update, :destroy]
+  before_action :set_model, only: [:edit, :update, :destroy, :show]
   add_breadcrumb 'Модели', '/models'
 
   def index
     @models = Model.includes(:sub_brand).order(:sub_brand_id, :title)
+  end
+
+  def show
+    render turbo_stream: [turbo_stream.replace(@model, partial: 'models/model', locals: { model: @model })]
   end
 
   def new
@@ -28,12 +32,18 @@ class ModelsController < ApplicationController
 
   def edit
     add_breadcrumb @model.title, edit_model_path(@model)
+    render turbo_stream: [
+      turbo_stream.replace(@model, partial: 'models/edit')
+    ]
   end
 
   def update
     if @model.update(model_params)
-      flash[:success] = "Модель #{@model.title} была успешно обновлена."
-      redirect_to models_path
+      msg = "Модель #{@model.title} была успешно обновлена."
+      render turbo_stream: [
+        turbo_stream.replace(@model, partial: 'models/model', locals: { model: @model }),
+        success_notice(msg)
+      ]
     else
       error_notice(@model.errors.full_messages)
     end

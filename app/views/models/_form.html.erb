@@ -1,8 +1,24 @@
 <%= form_with(model: @model, url: url, method: method) do |form| %>
   <div class="row">
-    <div class="col-12 col-md-12 mb-3">
+    <div class="col-6 col-md-4 mb-3">
       <%= form.label :title, class: 'form-label' %>
       <%= form.text_field :title, value: @model.title, class: 'form-control', placeholder: 'Название модели' %>
+    </div>
+
+    <div class="col-6 col-md-4 mb-3">
+      <%= form.label :sub_brand_id, class: 'form-label' %>
+      <%= form.select :sub_brand_id, options_for_select(SubBrand.all.map { |i| [i.title, i.id] },
+                                                        @model.sub_brand_id), {}, class: 'form-select' %>
+    </div>
+
+    <div class="col-6 col-md-2 mb-3">
+      <%= form.label :start_year, class: 'form-label' %>
+      <%= form.select :start_year, options_for_select([*2000..Date.today.year], @model.start_year || 2008), {}, class: 'form-select' %>
+    </div>
+
+    <div class="col-6 col-md-2 mb-3">
+      <%= form.label :end_year, class: 'form-label' %>
+      <%= form.select :end_year, options_for_select([*2000..Date.today.year], @model.end_year || Date.today.year), {}, class: 'form-select' %>
     </div>
 
     <div class="mb-3">
@@ -11,25 +27,9 @@
                       { multiple: true }, class: 'form-select', size: 5 %>
     </div>
 
-    <div class="col-12 col-md-4 mb-3">
-      <%= form.label :sub_brand_id, class: 'form-label' %>
-      <%= form.select :sub_brand_id, options_for_select(SubBrand.all.map { |i| [i.title, i.id] },
-                                                        @model.sub_brand_id), {}, class: 'form-select' %>
-    </div>
-
-    <div class="col-6 col-md-4 mb-3">
-      <%= form.label :start_year, class: 'form-label' %>
-      <%= form.select :start_year, options_for_select([*2000..Date.today.year], @model.start_year || 2008), {}, class: 'form-select' %>
-    </div>
-
-    <div class="col-6 col-md-4 mb-3">
-      <%= form.label :end_year, class: 'form-label' %>
-      <%= form.select :end_year, options_for_select([*2000..Date.today.year], @model.end_year || Date.today.year), {}, class: 'form-select' %>
-    </div>
-
-    <div class="col-12 col-md-12 mb-3">
+    <div class="col-12 col-md-12">
       <%= form.submit method == :patch ?  'Сохранить' : 'Добавить',
-                      class: "btn #{method == :patch ? 'btn-warning' : 'btn-primary'} mt-md-2 mt-0 btn-sm" %>
+                      class: "btn #{method == :patch ? 'btn-warning' : 'btn-primary'} btn-sm" %>
     </div>
   </div>
 <% end %>
