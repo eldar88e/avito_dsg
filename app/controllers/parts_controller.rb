@@ -34,19 +34,12 @@ class PartsController < ApplicationController
 
   def update
     if @part.update(part_params)
-      if params[:part][:photos].present? && params[:part][:photos].size < 21
-        params[:part][:photos].each do |photo|
-          @part.photos.attach(photo)
-        end
-      else
-        return error_notice('Вложений должно быть до 20шт.')
-      end
+      photos = params[:part][:photos]
+      return error_notice('Вложений должно быть до 20шт.') if photos.size > 21
 
-      if params[:part][:remove_photos].present?
-        params[:part][:remove_photos].each do |photo_id|
-          @part.photos.find(photo_id).purge
-        end
-      end
+      photos.each { |photo| @part.photos.attach(photo) }
+      remove_photo
+
       msg = "Запчасть #{@part.title} была успешно обновлена."
       render turbo_stream: [
         turbo_stream.replace(@part, partial: 'parts/form', locals: { url: part_path(@part), method: :patch }),
@@ -68,12 +61,9 @@ class PartsController < ApplicationController
 
   private
 
-  def save_images
-    img_params.each { |_, value| value.reject(&:blank?).present? && @part.photos.attach(value) }
-  end
-
-  def img_params
-    params.require(:part).permit(photos: [])
+  def remove_photo
+    photo_ids = params[:part][:remove_photos]
+    photo_ids&.each { |photo_id| @part.photos.find(photo_id).purge }
   end
 
   def set_part
