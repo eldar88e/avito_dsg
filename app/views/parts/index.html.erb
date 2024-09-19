@@ -6,6 +6,15 @@
   <ul class="list-group">
     <%= render '/parts/new_btn' %>
 
+    <li class="list-group-item list-group-item-action active d-none d-md-block" id='title_part'>
+      <div class="row d-flex justify-content-between">
+        <div class="col-12 col-md-5 mb-3 mb-md-0">Название</div>
+        <div class="col-md-2 d-none d-md-block">Стоимость min, ₽</div>
+        <div class="col-md-2 d-none d-md-block">Стоимость max, ₽</div>
+        <div class="col-12 col-md-3 d-flex gap-3 justify-content-end"></div>
+      </div>
+    </li>
+
     <% @parts.each do |part| %>
         <%= render part %>
     <% end %>

@@ -20,7 +20,7 @@ class PartsController < ApplicationController
       msg.sub!('добавлена', 'скопирована') if params[:copy_id]
       render turbo_stream: [
         turbo_stream.replace(:new_part, partial: 'parts/new_btn'),
-        turbo_stream.after(:new_part, partial: 'parts/part', locals: { part: @part }),
+        turbo_stream.after(:title_part, partial: 'parts/part', locals: { part: @part }),
         success_notice(msg)
       ]
     else
