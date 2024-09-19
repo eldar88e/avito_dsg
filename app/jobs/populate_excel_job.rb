@@ -32,7 +32,7 @@ class PopulateExcelJob < ApplicationJob
     content = workbook.read_string
     File.open(xlsx_path, 'wb') { |f| f.write(content) }
 
-    domain = Rails.env.production? ? 'server.open-ps.ru' : 'localhost:3000'
+    domain = Rails.env.production? ? 'avito.dsg7.ru' : 'localhost:3000'
     msg    = "✅ File http://#{domain}#{xlsx_path[1..-1]} is updated!"
     broadcast_notify(msg)
     TelegramService.call(user, msg)
