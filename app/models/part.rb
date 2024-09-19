@@ -12,6 +12,14 @@ class Part < ApplicationRecord
 
   before_destroy :remove_parts_associations
 
+  def photos_thumb
+    photos.variant(resize_to_limit: [50, 50]).processed
+  end
+
+  def photos_medium
+    photos.variant(resize_to_limit: [400, 400]).processed
+  end
+
   private
 
   def remove_parts_associations

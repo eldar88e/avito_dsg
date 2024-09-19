@@ -1,6 +1,7 @@
 class ModelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_model, only: [:edit, :update, :destroy]
+  add_breadcrumb 'Модели', '/models'
 
   def index
     @models = Model.includes(:sub_brand).order(:sub_brand_id, :title)
@@ -25,7 +26,9 @@ class ModelsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    add_breadcrumb @model.title, edit_model_path(@model)
+  end
 
   def update
     if @model.update(model_params)

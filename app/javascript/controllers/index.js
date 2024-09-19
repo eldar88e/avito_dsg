@@ -4,38 +4,41 @@
 
 import { application } from "./application"
 
+import BtnPreloaderController from "./btn_preloader_controller"
+application.register("btn-preloader", BtnPreloaderController)
+
+import CheckboxesController from "./checkboxes_controller"
+application.register("checkboxes", CheckboxesController)
+
+import ClearFormController from "./clear_form_controller"
+application.register("clear-form", ClearFormController)
+
+import CollapseController from "./collapse_controller"
+application.register("collapse", CollapseController)
+
 import ConfirmController from "./confirm_controller"
 application.register("confirm", ConfirmController)
 
-import BtnPreloaderController from "./btn_preloader_controller"
-application.register("btn_preloader", BtnPreloaderController)
+import ExpandTextController from "./expand_text_controller"
+application.register("expand-text", ExpandTextController)
+
+import FancyboxController from "./fancybox_controller"
+application.register("fancybox", FancyboxController)
+
+import LayerController from "./layer_controller"
+application.register("layer", LayerController)
+
+import MapController from "./map_controller"
+application.register("map", MapController)
+
+import NoImageController from "./no_image_controller"
+application.register("no-image", NoImageController)
 
 import NoticesController from "./notices_controller"
 application.register("notices", NoticesController)
 
-import ClearFormController from "./clear_form_controller"
-application.register('clear-form', ClearFormController);
+import PagyInitializerController from "./pagy_initializer_controller"
+application.register("pagy-initializer", PagyInitializerController)
 
-import FancyboxController from "./fancybox_controller"
-application.register('fancybox', FancyboxController);
-
-import PagyInitializerController from "./pagy_initializer_controller";
-application.register('pagy_initializer', PagyInitializerController);
-
-import MapController from "./map_controller";
-application.register('map', MapController);
-
-import SwiperController from "./swiper_controller";
-application.register('swiper', SwiperController);
-
-import ExpandTextController from "./expand_text_controller";
-application.register('expand_text', ExpandTextController);
-
-import CollapseController from "./collapse_controller";
-application.register('collapse', CollapseController);
-
-import LayerController from "./layer_controller";
-application.register('layer', LayerController);
-
-import NoImageController from "./no_image_controller";
-application.register('no_image', NoImageController);
+import SwiperController from "./swiper_controller"
+application.register("swiper", SwiperController)

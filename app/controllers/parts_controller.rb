@@ -1,6 +1,8 @@
 class PartsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_part, only: [:edit, :update, :destroy]
+  before_action :set_photos, only: [:edit, :update]
+  add_breadcrumb 'Oбъявления', '/parts'
 
   def index
     @parts = Part.all.order(:title, :model_part_id)
@@ -26,7 +28,9 @@ class PartsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    add_breadcrumb @part.title, edit_part_path(@part)
+  end
 
   def update
     if @part.update(part_params)
@@ -43,8 +47,11 @@ class PartsController < ApplicationController
           @part.photos.find(photo_id).purge
         end
       end
-      flash[:success] = "Запчасть #{@part.title} была успешно обновлена."
-      redirect_to parts_path # @sub_part
+      msg = "Запчасть #{@part.title} была успешно обновлена."
+      render turbo_stream: [
+        turbo_stream.replace(@part, partial: 'parts/form', locals: { url: part_path(@part), method: :patch }),
+        success_notice(msg)
+      ]
     else
       error_notice(@part.errors.full_messages)
     end
@@ -71,6 +78,10 @@ class PartsController < ApplicationController
 
   def set_part
     @part = Part.find(params[:id])
+  end
+
+  def set_photos
+    @pagy, @photos = pagy(@part.photos.order(created_at: :desc), items: 30)
   end
 
   def part_params

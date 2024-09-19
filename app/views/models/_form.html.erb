@@ -6,29 +6,29 @@
     </div>
 
     <div class="mb-3">
-      <%= form.label :sub_brand_id, class: 'form-label' %>
-      <%= form.select :sub_brand_id, options_for_select(SubBrand.all.map { |i| [i.title, i.id] },
-                                                        @model.sub_brand_id), {}, class: 'form-select' %>
-    </div>
-
-    <div class="mb-3">
       <%= form.label :part_ids, class: 'form-label' %>
       <%= form.select :part_ids, options_for_select(Part.all.map { |i| ["#{i.title} #{i.model_part.title}", i.id] }, @model.part_ids),
                       { multiple: true }, class: 'form-select', size: 2 %>
     </div>
 
-    <div class="mb-3">
-      <%= form.label :start_year, class: 'form-label' %>
-      <%= form.select :start_year, options_for_select([*2007..Date.today.year], @model.start_year || 2008), {}, class: 'form-select' %>
+    <div class="col-12 col-md-4 mb-3">
+      <%= form.label :sub_brand_id, class: 'form-label' %>
+      <%= form.select :sub_brand_id, options_for_select(SubBrand.all.map { |i| [i.title, i.id] },
+                                                        @model.sub_brand_id), {}, class: 'form-select' %>
     </div>
 
-    <div class="mb-3">
+    <div class="col-6 col-md-4 mb-3">
+      <%= form.label :start_year, class: 'form-label' %>
+      <%= form.select :start_year, options_for_select([*2000..Date.today.year], @model.start_year || 2008), {}, class: 'form-select' %>
+    </div>
+
+    <div class="col-6 col-md-4 mb-3">
       <%= form.label :end_year, class: 'form-label' %>
-      <%= form.select :end_year, options_for_select([*2007..Date.today.year], @model.end_year || Date.today.year), {}, class: 'form-select' %>
+      <%= form.select :end_year, options_for_select([*2000..Date.today.year], @model.end_year || Date.today.year), {}, class: 'form-select' %>
     </div>
 
     <div class="col-12 col-md-12 mb-3">
-      <%= form.submit method == :patch ?  'Save' : 'Add',
+      <%= form.submit method == :patch ?  'Сохранить' : 'Добавить',
                       class: "btn #{method == :patch ? 'btn-warning' : 'btn-primary'} mt-md-2 mt-0 btn-sm" %>
     </div>
   </div>

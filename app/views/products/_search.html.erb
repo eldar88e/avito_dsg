@@ -1,6 +1,6 @@
 <%= search_form_for @q, url: products_path, method: :get do |f| %>
   <div class="mb-3 d-flex gap-1">
-    <%= f.text_field :title, class: 'form-control' %>
+    <%= f.text_field :title_cont_any, class: 'form-control' %>
     <%= button_tag(type: 'submit', class: 'btn btn-primary') do %>
       <i class="bi bi-search"></i>
     <% end %>

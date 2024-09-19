@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Pagy::Backend
   helper_method :noimage_url
   before_action :set_search
+  add_breadcrumb 'Главная', '/'
 
   def error_notice(msg)
     render turbo_stream: send_notice(msg, 'danger')

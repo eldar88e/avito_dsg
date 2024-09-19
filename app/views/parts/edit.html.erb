@@ -1,7 +1,7 @@
 <% content_for :title do %>
-  Редактирование Запчасти <%= @part.title %>
+  Редактирование запчасти <%= @part.title %>
 <% end %>
 
-<div class="container">
+<div class="container" data-controller="checkboxes">
   <%= render partial: '/parts/form', locals: { url: part_path(@part), method: :patch } %>
 </div>
