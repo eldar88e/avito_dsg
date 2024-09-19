@@ -10,7 +10,7 @@
       </a>
     </div>
     <div class="col=12 col-md-4">
-      <% file_path = Rails.root.join('game_lists', "top_1000_#{store.var}.xlsx") %>
+      <% file_path = Rails.root.join('game_lists', "#{store.var}.xlsx") %>
       <% if File.exist?(file_path) %>
         <%= File.mtime(file_path).strftime('%H:%M %d.%m.%Yг.') %>
       <% end %>
