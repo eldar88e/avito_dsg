@@ -1,6 +1,8 @@
 class StoresController < ApplicationController
   before_action :authenticate_user!
   before_action :set_store, only: [:show, :edit, :update, :destroy]
+  add_breadcrumb 'Stores', '/stores'
+  before_action :set_breadcrumbs, only: [:show, :edit]
 
   def index
     @stores = current_user.stores.order(active: :desc).order(:created_at)
@@ -54,6 +56,10 @@ class StoresController < ApplicationController
 
   def set_store
     @store = current_user.stores.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb @store.manager_name, store_path(@store)
   end
 
   def store_params

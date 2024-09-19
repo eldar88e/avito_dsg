@@ -3,8 +3,8 @@ class PopulateExcelJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
   def perform(**args)
-    user    = find_user(args) || User.first     # TODO убрать User.first
-    store   = user.stores.first
+    user    = args[:store]&.user || find_user(args) || User.first     # TODO убрать User.first
+    store   = args[:store] || user.stores.first # TODO убрать stores.first
     address = store.addresses[0].store_address  # TODO если будет несколько адресов то пройти по ним each
     ads     = user.ads.includes(:adable).where(deleted: 0).with_attached_image
 
