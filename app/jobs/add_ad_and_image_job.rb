@@ -30,7 +30,10 @@ class AddAdAndImageJob < ApplicationJob
                   mutex.synchronize do
                     ad = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
                   end
-                  form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
+                  img_io = form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
+                  mutex.synchronize do
+                    ad.image.attach(io: img_io, filename: "#{ad.title.gsub(' ', '_')}.jpg", content_type: 'image/jpeg')
+                  end
                 end
               end
               threads << thread
@@ -78,7 +81,6 @@ class AddAdAndImageJob < ApplicationJob
     image.format = 'JPEG'
     img_blob     = image.to_blob
     img_io       = StringIO.new(img_blob)
-    ad.image.attach(io: img_io, filename: "#{ad.title.gsub(' ', '_')}.jpg", content_type: 'image/jpeg')
   end
 
   def save_image_old(ad, image)
