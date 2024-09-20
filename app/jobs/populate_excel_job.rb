@@ -47,7 +47,7 @@ class PopulateExcelJob < ApplicationJob
     image = ad.image
     if image.nil? || image.blob.nil?
       Rails.logger.error('Not existing attach or blob!')
-      return
+      return ''
     end
 
     params = Rails.env.production? ? { host: 'avito.dsg7.ru' } : { host: 'localhost', port: 3000 }
