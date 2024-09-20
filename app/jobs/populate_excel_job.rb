@@ -44,7 +44,9 @@ class PopulateExcelJob < ApplicationJob
   private
 
   def make_image(ad)
-    image  = ad.image
+    image = ad.image
+    return Rails.logger.error('Not existing attach or blob!') if image.nil? && image.blob.nil?
+
     params = Rails.env.production? ? { host: 'avito.dsg7.ru' } : { host: 'localhost', port: 3000 }
     return rails_blob_url(image, params) if image.blob.service_name != "amazon"
 

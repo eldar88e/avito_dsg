@@ -18,6 +18,8 @@ class AddAdAndImageJob < ApplicationJob
       dsg_var.each do |dsg|
         dsg_title = dsg.present? ? dsg : ''
         parts.each do |part|
+          Rails.logger.error("Part #{part.id} has no photos") && next if part.photos.blank?
+
           part.models.each do |model|
             years_slices = [*model.start_year..model.end_year].each_slice(MAX_THREADS).to_a
             years_slices.each do |years|
@@ -65,8 +67,6 @@ class AddAdAndImageJob < ApplicationJob
   end
 
   def form_image(ad, store, settings, part)
-    return Rails.logger.error "Part #{part.id} has no photos" if part.photos.blank?
-
     w_service   = WatermarkService.new(store: store, settings: settings, images: part.photos)
     dynamic_img = [:rotate, nil].sample
     image       = w_service.add_watermarks(:rotate)
