@@ -1,3 +1,5 @@
+# AddAdAndImageJob.perform_now(user: User.first)
+
 class AddAdAndImageJob < ApplicationJob
   queue_as :default
   include Rails.application.routes.url_helpers
@@ -80,7 +82,8 @@ class AddAdAndImageJob < ApplicationJob
   def save_image(ad, image)
     image.format = 'JPEG'
     img_blob     = image.to_blob
-    img_io       = StringIO.new(img_blob)
+    # img_io       =
+    StringIO.new(img_blob)
   end
 
   def save_image_old(ad, image)
