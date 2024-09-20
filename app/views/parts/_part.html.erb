@@ -2,8 +2,9 @@
   <div class="row d-flex justify-content-between">
     <div class="col-12 col-md-5 mb-3 mb-md-0 d-flex gap-3 gap-md-2">
       <% if part.photos.present? %>
-        <%= content_tag :div, class: 'part-icon', style: "background: url(#{img_resize(part.photos.first, 70)});" do %>
-        <% end %>
+        <%= content_tag :div, class: 'part-icon', style: "background: url(#{img_resize(part.photos.first, 70)});,
+                                                          background-position: center;
+                                                          background-size: cover;" do %><% end %>
       <% end %>
       <div><%= "#{part.title} #{part.model_part.title}" %></div>
     </div>

@@ -450,6 +450,7 @@ button.add:after, a.add:after {
 .part-icon {
   width: 40px;
   height: 31px;
-  background-position: center;
-  background-size: cover;
+  @media (max-width: 767px) {
+      height: 48px;
+    }
 }
