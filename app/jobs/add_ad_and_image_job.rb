@@ -9,7 +9,7 @@ class AddAdAndImageJob < ApplicationJob
     parts    = Part.includes(:models, :model_part)
     brands   = Brand.all
     dsg_var  = settings['dsg'].split(', ')
-
+    binding.pry
     brands.each do |brand|
       brand_title = brand.title == 'Luk' ? brand.title.upcase : nil
       dsg_var.each do |dsg|
@@ -24,6 +24,8 @@ class AddAdAndImageJob < ApplicationJob
           end
         end
       end
+    rescue =>e
+      binding.pry
     end
     nil
   end
