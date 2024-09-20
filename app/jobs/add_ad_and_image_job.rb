@@ -9,11 +9,10 @@ class AddAdAndImageJob < ApplicationJob
     parts    = Part.includes(:models, :model_part)
     brands   = Brand.all
     dsg_var  = settings['dsg'].split(', ')
-    binding.pry
     brands.each do |brand|
-      brand_title = brand.title == 'Luk' ? brand.title.upcase : nil
+      brand_title = brand.title == 'Luk' ? brand.title.upcase : ''
       dsg_var.each do |dsg|
-        dsg_title = dsg.present? ? dsg : nil
+        dsg_title = dsg.present? ? dsg : ''
         parts.each do |part|
           part.models.each do |model|
             [*model.start_year..model.end_year][0..0].each do |year|      # TODO убрать [0..0]
