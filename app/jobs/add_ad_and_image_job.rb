@@ -26,9 +26,10 @@ class AddAdAndImageJob < ApplicationJob
               thread = Thread.new do
                 years.each do |year|
                   title = make_title(part, dsg_title, brand_title, model, year)
-                  #mutex.synchronize do
-                    ad    = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
-                  #end
+                  ad = nil
+                  mutex.synchronize do
+                    ad = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
+                  end
                   form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
                 end
               end
