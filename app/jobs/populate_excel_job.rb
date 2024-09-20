@@ -21,6 +21,7 @@ class PopulateExcelJob < ApplicationJob
       part    = ad.adable
       prices  = (part.min_price...part.max_price).step(100).to_a  #TODO Вынести в ad
       brand   = ad.title.match?(/LUK/) ? 'Luk' : 'VAG'            #TODO Вынести в ad
+      binding.pry
       worksheet.append_row(
         [ad.id, ad_type, "#{address}#{rand(3..161)}", ad.title, make_description(ad.title, store, part),
          store.condition, prices.sample, store.allow_email, store.manager_name, store.contact_phone,
