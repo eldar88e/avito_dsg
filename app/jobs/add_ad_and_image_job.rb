@@ -29,13 +29,10 @@ class AddAdAndImageJob < ApplicationJob
                 years.each do |year|
                   title = make_title(part, dsg_title, brand_title, model, year)
                   ad = nil
-                  mutex.synchronize do
-                    ad = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
+                    mutex.synchronize do
+                      ad = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
                   end
-                  img_io = form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
-                  mutex.synchronize do
-                    ad.image.attach(io: img_io, filename: "#{ad.title.gsub(' ', '_')}.jpg", content_type: 'image/jpeg')
-                  end
+                  form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
                 end
               end
               threads << thread
@@ -82,8 +79,8 @@ class AddAdAndImageJob < ApplicationJob
   def save_image(ad, image)
     image.format = 'JPEG'
     img_blob     = image.to_blob
-    # img_io       =
-    StringIO.new(img_blob)
+    img_io       = StringIO.new(img_blob)
+    ad.image.attach(io: img_io, filename: "#{ad.title.gsub(' ', '_')}.jpg", content_type: 'image/jpeg')
   end
 
   def save_image_old(ad, image)
