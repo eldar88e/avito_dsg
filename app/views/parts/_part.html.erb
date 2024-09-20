@@ -1,6 +1,12 @@
 <li class="list-group-item list-group-item-action" id="part_<%= part.id %>">
   <div class="row d-flex justify-content-between">
-    <div class="col-12 col-md-5 mb-3 mb-md-0"><%= "#{part.title} #{part.model_part.title}" %></div>
+    <div class="col-12 col-md-5 mb-3 mb-md-0 d-flex gap-3 gap-md-2">
+      <% if part.photos.present? %>
+        <%= content_tag :div, class: 'part-icon', style: "background: url(#{img_resize(part.photos.first, 70)});" do %>
+        <% end %>
+      <% end %>
+      <div><%= "#{part.title} #{part.model_part.title}" %></div>
+    </div>
     <div class="col-md-1 d-none d-md-block"><%= part.min_price %></div>
     <div class="col-md-1 d-none d-md-block"><%= part.max_price %></div>
     <div class="col-12 col-md-3 d-flex gap-3 justify-content-end">
