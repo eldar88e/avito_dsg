@@ -1,6 +1,7 @@
 class AddAdAndImageJob < ApplicationJob
   queue_as :default
   include Rails.application.routes.url_helpers
+  MAX_THREADS = 4
 
   def perform(**args)
     user     = find_user(args) || User.first  #TODO убрать User.first
@@ -9,21 +10,33 @@ class AddAdAndImageJob < ApplicationJob
     parts    = Part.includes(:models, :model_part)
     brands   = Brand.all
     dsg_var  = settings['dsg'].split(', ')
+    threads  = []
+    mutex    = Mutex.new
+
     brands.each do |brand|
       brand_title = brand.title == 'Luk' ? brand.title.upcase : ''
       dsg_var.each do |dsg|
         dsg_title = dsg.present? ? dsg : ''
         parts.each do |part|
           part.models.each do |model|
-            [*model.start_year..model.end_year][0..0].each do |year|      # TODO убрать [0..0]
-              title = make_title(part, dsg_title, brand_title, model, year)
-              ad    = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
-              form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
+            years_slices = [*model.start_year..model.end_year].each_slice(MAX_THREADS).to_a
+            years_slices.each do |years|
+              thread = Thread.new do
+                years.each do |year|
+                  title = make_title(part, dsg_title, brand_title, model, year)
+                  #mutex.synchronize do
+                    ad    = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
+                  #end
+                  form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
+                end
+              end
+              threads << thread
             end
+            threads.each(&:join)
           end
         end
       end
-    rescue =>e
+    rescue => e
       binding.pry
     end
     nil
