@@ -23,26 +23,24 @@ class AddAdAndImageJob < ApplicationJob
           Rails.logger.error("Part #{part.id} has no photos") && next if part.photos.blank?
 
           part.models.each do |model|
-            years_slices = [*model.start_year..model.end_year].each_slice(MAX_THREADS).to_a
-            years_slices.each do |years|
-              thread = Thread.new do
+            #years_slices = [*model.start_year..model.end_year].each_slice(MAX_THREADS).to_a
+            [*model.start_year..model.end_year].each do |years|
+              #thread = Thread.new do
                 years.each do |year|
                   title = make_title(part, dsg_title, brand_title, model, year)
-                  ad = nil
-                    mutex.synchronize do
-                      ad = find_or_save_ad(store: store, user: user, title: title, file_id: title, adable: part)
-                  end
+                  #ad = nil
+                  #mutex.synchronize do
+                      ad = find_or_save_ad(store: store, user: user, title: title, adable: part)
+                  #end
                   form_image(ad, store, settings, part) if ad.image.blank? || args[:update]
                 end
-              end
-              threads << thread
+              #end
+              #threads << thread
             end
-            threads.each(&:join)
+            #threads.each(&:join)
           end
         end
       end
-    rescue => e
-      binding.pry
     end
     nil
   end
