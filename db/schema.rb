@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_17_041027) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_21_102631) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_041027) do
 
   create_table "ads", force: :cascade do |t|
     t.bigint "store_id", null: false
-    t.string "file_id", null: false
+    t.string "file_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "adable_type", null: false
@@ -75,6 +75,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_041027) do
     t.integer "deleted", default: 0, null: false
     t.bigint "user_id", null: false
     t.string "title"
+    t.boolean "banned", default: false, null: false
+    t.datetime "banned_until"
     t.index ["adable_type", "adable_id"], name: "index_ads_on_adable"
     t.index ["file_id"], name: "index_ads_on_file_id"
     t.index ["store_id"], name: "index_ads_on_store_id"

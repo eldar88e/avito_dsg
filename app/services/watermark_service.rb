@@ -11,8 +11,7 @@ class WatermarkService
     @width     = (@settings[:avito_img_width] || 1920).to_i
     @height    = (@settings[:avito_img_height] || 1440).to_i
     @new_image = initialize_first_layer
-    @images    = args[:images]
-    img_url    = find_main_ad_img
+    img_url    = find_main_ad_img(args[:images])
     @image     = image_exist?(img_url)
     @layers    = make_layers_row
 
@@ -109,10 +108,10 @@ class WatermarkService
     response.is_a?(Net::HTTPSuccess)
   end
 
-  def find_main_ad_img
-    return unless @images.present?
+  def find_main_ad_img(images)
+    return unless images.present?
 
-    key = @images.sample.blob.key
+    key = images.sample.blob.key
     raw_path = key.scan(/.{2}/)[0..1].join('/')
     "./storage/#{raw_path}/#{key}"
   end
