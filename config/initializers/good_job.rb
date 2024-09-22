@@ -14,13 +14,6 @@ Rails.application.configure do
       set: { priority: 10 }, # additional ActiveJob properties; can also be a lambda/proc e.g. `-> { { priority: [1,2].sample } }`
       description: "Populate excel feed."
     },
-    update_excel: {
-      cron: "0 2 29 2 *",
-      class: "WatermarksSheetsJob",
-      kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
-      set: { priority: 10 },
-      description: "Update all excel files"
-    },
     clear: {
       cron: "0 3 29 2 *",
       class: "Clean::MainCleanerJob",
@@ -37,21 +30,6 @@ Rails.application.configure do
       class: "MainPopulateJob",
       set: { priority: 10 },
       description: "Populate excel feed."
-    },
-    check_avito_shedules: {
-      cron: "10 8-23 * * *",
-      class: "Avito::CheckSchedulesJob",
-      set: { priority: 10 },
-      #args: [42, "life"],
-      kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
-      description: "Check store schedules in avito"
-    },
-    check_avito_errors: {
-      cron: "50 7,20 * * *",
-      class: "Avito::CheckErrorsJob",
-      set: { priority: 10 },
-      kwargs: { user_id: ENV.fetch("USER_ID") { 1 }.to_i },
-      description: "Check errors in the last report"
     }
   }
 
