@@ -37,7 +37,7 @@ class PartsController < ApplicationController
       photos = params[:part][:photos]
       return error_notice('Вложений должно быть до 20шт.') if photos.size > 21
 
-      photos.each { |photo| @part.photos.attach(photo) }
+      photos.each { |photo| @part.photos.attach(photo) } # TODO устранить дублирование photos
       remove_photo
 
       msg = "Запчасть #{@part.title} была успешно обновлена."
