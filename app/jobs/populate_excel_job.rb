@@ -28,11 +28,10 @@ class PopulateExcelJob < ApplicationJob
              'Запчасти и аксессуары', 'Для автомобилей', 'Трансмиссия и привод']  # TODO хардкод убрать в Store или Part
           )
         end
-
         content   = workbook.read_string
         xlsx_path = "./game_lists/#{store.var}.xlsx"
         File.open(xlsx_path, 'wb') { |f| f.write(content) }
-
+        binding.pry
         domain = Rails.env.production? ? 'avito.dsg7.ru' : 'localhost:3000'
         msg    = "✅ File http://#{domain}#{xlsx_path[1..-1]} is updated!"
         broadcast_notify(msg)
