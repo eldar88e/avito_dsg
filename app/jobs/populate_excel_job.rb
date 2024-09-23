@@ -15,13 +15,12 @@ class PopulateExcelJob < ApplicationJob
     stores.each do |store|
       address = store.addresses[0].store_address
       ads     = store.ads.active_ads.includes(:adable).with_attached_image
-      binding.pry
       ads.find_each(batch_size: 200).each do |ad|
         ad_type = store.ad_type.split(', ').sample
         part    = ad.adable
         prices  = (part.min_price...part.max_price).step(100).to_a  #TODO Вынести в ad
         brand   = ad.title.match?(/LUK/) ? 'Luk' : 'VAG'            #TODO Вынести в ad
-
+        binding.pry
         worksheet.append_row(
           [ad.id, ad_type, "#{address}#{rand(3..161)}", ad.title, make_description(ad.title, store, part),
            store.condition, prices.sample, store.allow_email, store.manager_name, store.contact_phone,
@@ -39,6 +38,7 @@ class PopulateExcelJob < ApplicationJob
       broadcast_notify(msg)
       TelegramService.call(user, msg)
     end
+
     nil
   rescue => e
     Rails.logger.error("Error #{self.class} || #{e.message}")
@@ -49,7 +49,6 @@ class PopulateExcelJob < ApplicationJob
 
   def make_image(ad)
     image = ad.image
-    binding.pry
     if image.nil? || image.blob.nil?
       Rails.logger.error('Not existing attach or blob!')
       return ''

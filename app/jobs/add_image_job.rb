@@ -7,8 +7,12 @@ class AddImageJob < ApplicationJob
   def perform(**args)
     user     = find_user(args) || User.first  #TODO убрать User.first
     settings = user.settings.pluck(:var, :value).to_h
-    ads      = user.ads.includes(:adable).where(deleted: 0).with_attached_image
-    ads.find_each(batch_size: 200).each { |ad| save_image(ad, settings) if !ad.image.attached? || args[:update] }
+    stores   = [args[:store] || user.stores].flatten
+    stores.each do |store|
+      ads = store.ads.includes(:adable).where(deleted: 0).with_attached_image
+      ads.find_each(batch_size: 200).each { |ad| save_image(ad, settings) if !ad.image.attached? || args[:update] }
+    end
+
     nil
   end
 
