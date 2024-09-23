@@ -14,7 +14,8 @@ class PopulateExcelJob < ApplicationJob
 
     stores.each do |store|
       address = store.addresses[0].store_address
-      ads     = store.ads.active_ads.includes(:adable).where(deleted: 0).with_attached_image
+      ads     = store.ads.active_ads.includes(:adable).with_attached_image
+      binding.pry
       ads.find_each(batch_size: 200).each do |ad|
         ad_type = store.ad_type.split(', ').sample
         part    = ad.adable
@@ -48,6 +49,7 @@ class PopulateExcelJob < ApplicationJob
 
   def make_image(ad)
     image = ad.image
+    binding.pry
     if image.nil? || image.blob.nil?
       Rails.logger.error('Not existing attach or blob!')
       return ''
