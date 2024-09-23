@@ -13,30 +13,31 @@ class PopulateExcelJob < ApplicationJob
     )
 
     stores.each do |store|
-      address = store.addresses[0].store_address
-      ads     = store.ads.active_ads.includes(:adable).with_attached_image
-      ads.find_each(batch_size: 200).each do |ad|
-        ad_type = store.ad_type.split(', ').sample
-        part    = ad.adable
-        prices  = (part.min_price...part.max_price).step(100).to_a  #TODO Вынести в ad
-        brand   = ad.title.match?(/LUK/) ? 'Luk' : 'VAG'            #TODO Вынести в ad
-        binding.pry
-        worksheet.append_row(
-          [ad.id, ad_type, "#{address}#{rand(3..161)}", ad.title, make_description(ad.title, store, part),
-           store.condition, prices.sample, store.allow_email, store.manager_name, store.contact_phone,
-           'Оригинал', 'В наличии', brand, rand(400000000..499999999), part.part_type, make_image(ad), 'Запчасти',
-           'Запчасти и аксессуары', 'Для автомобилей', 'Трансмиссия и привод']  # TODO хардкод убрать в Store или Part
-        )
+      store.addresses.each do |i|
+        address = i.store_address
+        ads     = store.ads.active_ads.includes(:adable).with_attached_image
+        ads.find_each(batch_size: 200).each do |ad|
+          ad_type = store.ad_type.split(', ').sample
+          part    = ad.adable
+          prices  = (part.min_price...part.max_price).step(100).to_a  #TODO Вынести в ad
+          brand   = ad.title.match?(/LUK/) ? 'Luk' : 'VAG'            #TODO Вынести в ad
+          worksheet.append_row(
+            [ad.id, ad_type, "#{address}#{rand(3..161)}", ad.title, make_description(ad.title, store, part),
+             store.condition, prices.sample, store.allow_email, store.manager_name, store.contact_phone,
+             'Оригинал', 'В наличии', brand, rand(400000000..499999999), part.part_type, make_image(ad), 'Запчасти',
+             'Запчасти и аксессуары', 'Для автомобилей', 'Трансмиссия и привод']  # TODO хардкод убрать в Store или Part
+          )
+        end
+
+        content   = workbook.read_string
+        xlsx_path = "./game_lists/#{store.var}.xlsx"
+        File.open(xlsx_path, 'wb') { |f| f.write(content) }
+
+        domain = Rails.env.production? ? 'avito.dsg7.ru' : 'localhost:3000'
+        msg    = "✅ File http://#{domain}#{xlsx_path[1..-1]} is updated!"
+        broadcast_notify(msg)
+        TelegramService.call(user, msg)
       end
-
-      content   = workbook.read_string
-      xlsx_path = "./game_lists/#{store.var}.xlsx"
-      File.open(xlsx_path, 'wb') { |f| f.write(content) }
-
-      domain = Rails.env.production? ? 'avito.dsg7.ru' : 'localhost:3000'
-      msg    = "✅ File http://#{domain}#{xlsx_path[1..-1]} is updated!"
-      broadcast_notify(msg)
-      TelegramService.call(user, msg)
     end
 
     nil
