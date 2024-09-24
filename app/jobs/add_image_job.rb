@@ -5,12 +5,29 @@ class AddImageJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
   def perform(**args)
-    user     = find_user(args) || User.first  #TODO убрать User.first
-    settings = user.settings.pluck(:var, :value).to_h
-    stores   = [args[:store] || user.stores].flatten
+    user      = find_user(args) || User.first  #TODO убрать User.first
+    settings  = args[:settings] || user.settings.pluck(:var, :value).to_h
+    stores    = [args[:store] || user.stores].flatten
+    addr_args = { active: true }
+    count     = 0
+    addr_args[:id] = args[:address_id].to_i if args[:address_id].present?
+
     stores.each do |store|
-      ads = store.ads.includes(:adable).where(deleted: 0).with_attached_image
-      ads.find_each(batch_size: 200).each { |ad| save_image(ad, settings) if !ad.image.attached? || args[:update] }
+      store.addresses.where(addr_args).each do |address|
+        # TODO пока нет возможности получить address.ads
+        ads = store.ads.includes(:adable).where(deleted: 0).with_attached_image
+        ads.find_in_batches(batch_size: 200).each do |batch_ads|
+          batch_ads.each do |ad|
+            next if ad.image.attached? && !args[:clean]
+
+            save_image(ad, settings)
+            count += 1
+          end
+        end
+      end
+      msg = "🏞 Added #{count} image(s) for #{store.manager_name}"
+      broadcast_notify(msg)
+      TelegramService.call(user, msg)
     end
 
     nil
