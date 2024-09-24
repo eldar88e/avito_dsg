@@ -42,9 +42,11 @@
                       { multiple: true }, class: 'form-select', size: 20 %>
     </div>
 
-    <div class="mb-3">
-      <%= form.label :photos, "Укажите фото(поддерживаемые форматы: JPG, PNG, WEBP; размер файла должен быть менее 5мб)", class: 'form-label' %>
-      <%= form.file_field :photos, multiple: true, class: 'form-control', accept: 'image/jpeg, image/png, image/webp' %>
+    <div class="mb-3" data-controller="file-limit" data-file-limit-max-files-value="60">
+      <%= form.label :photos, "Укажите фото(поддерживаемые форматы: JPG, PNG, WEBP; размер файлов не должено превышать 1мб, допустимое кол-во для единоразовой загрузки 60 фото.)",
+                     class: 'form-label' %>
+      <%= form.file_field :photos, multiple: true, class: 'form-control', accept: 'image/jpeg, image/png, image/webp',
+                          data: { file_limit_target: "fileinput" }%>
     </div>
 
     <% if @photos.size > 0 %>

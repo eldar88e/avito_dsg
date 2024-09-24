@@ -4,12 +4,11 @@ class AddAdJob < ApplicationJob
   queue_as :default
 
   def perform(**args)
-    user     = find_user(args) || User.first  #TODO убрать User.first
-    stores   = [args[:store] || user.stores].flatten
-    settings = user.settings.pluck(:var, :value).to_h
-    parts    = Part.includes(:models, :model_part)
-    brands   = Brand.all
-    dsg_var  = settings['dsg'].split(', ')
+    user    = find_user(args) || User.first  #TODO убрать User.first
+    stores  = [args[:store] || user.stores].flatten
+    dsg_var = user.settings.pluck(:var, :value).to_h['dsg'].split(', ')
+    parts   = Part.includes(:models, :model_part)
+    brands  = Brand.all
 
     stores.each do |store|
       brands.each do |brand|

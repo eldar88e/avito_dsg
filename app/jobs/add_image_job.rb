@@ -6,7 +6,7 @@ class AddImageJob < ApplicationJob
 
   def perform(**args)
     user      = find_user(args) || User.first  #TODO убрать User.first
-    settings  = args[:settings] || user.settings.pluck(:var, :value).to_h
+    settings  = args[:settings] || {}
     stores    = [args[:store] || user.stores].flatten
     addr_args = { active: true }
     count     = 0

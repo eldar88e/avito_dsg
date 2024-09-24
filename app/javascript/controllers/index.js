@@ -42,3 +42,6 @@ application.register("pagy-initializer", PagyInitializerController)
 
 import SwiperController from "./swiper_controller"
 application.register("swiper", SwiperController)
+
+import FileLimitController from "./file_limit_controller"
+application.register("file-limit", FileLimitController)
