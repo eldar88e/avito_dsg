@@ -2,7 +2,7 @@ class PartsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_part, only: [:edit, :update, :destroy]
   before_action :set_photos, only: [:edit, :update]
-  add_breadcrumb 'Oбъявления', '/parts'
+  add_breadcrumb 'Запчасти', '/parts'
 
   def index
     @parts = Part.all.order(:title, :model_part_id)

@@ -33,5 +33,5 @@ Rails.application.configure do
     }
   }
 
-  config.good_job.cron = Rails.env.production? ? all.merge(production) : all
+  config.good_job.cron = all # Rails.env.production? ? all.merge(production) : all
 end
